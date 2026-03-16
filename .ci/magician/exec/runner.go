@@ -109,9 +109,12 @@ func (ar *Runner) AppendFile(name, data string) error {
 	if err != nil {
 		return fmt.Errorf("error opening file %s: %v", name, err)
 	}
-	defer f.Close()
 	if _, err := f.Write([]byte(data)); err != nil {
+		_ = f.Close()
 		return fmt.Errorf("error writing to file %s: %v", name, err)
+	}
+	if err := f.Close(); err != nil {
+		return fmt.Errorf("error closing file %s: %v", name, err)
 	}
 	return nil
 }
